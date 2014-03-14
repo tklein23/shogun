@@ -13,7 +13,6 @@
 #include <shogun/labels/Labels.h>
 #include <shogun/lib/common.h>
 #include <shogun/io/SGIO.h>
-#include <shogun/base/Parameter.h>
 
 using namespace shogun;
 

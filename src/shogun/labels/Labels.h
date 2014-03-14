@@ -15,9 +15,10 @@
 
 #include <shogun/lib/common.h>
 #include <shogun/base/SGObject.h>
-#include <shogun/labels/LabelTypes.h>
 #include <shogun/labels/LabelsFactory.h>
+#include <shogun/labels/LabelTypes.h>
 #include <shogun/features/SubsetStack.h>
+#include <shogun/lib/SGVector.h>
 
 namespace shogun
 {
