@@ -13,6 +13,7 @@
 #include <shogun/labels/DenseLabels.h>
 #include <shogun/labels/BinaryLabels.h>
 #include <shogun/mathematics/Statistics.h>
+#include <shogun/lib/SGVector.h>
 
 using namespace shogun;
 

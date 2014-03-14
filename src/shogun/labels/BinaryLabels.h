@@ -14,14 +14,13 @@
 #define _BINARY_LABELS__H__
 
 #include <shogun/lib/common.h>
-#include <shogun/io/File.h>
 #include <shogun/labels/LabelTypes.h>
 #include <shogun/labels/DenseLabels.h>
 
 namespace shogun
 {
 	class CFile;
-	class CDenseLabels;
+	template <class T> class SGVector;
 
 /** @brief Binary Labels for binary classification 
  *
