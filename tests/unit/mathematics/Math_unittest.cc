@@ -178,7 +178,7 @@ TEST(CMath, strtofloat)
 	EXPECT_DOUBLE_EQ(-CMath::INFTY, float_result);
 
 	EXPECT_TRUE(CMath::strtof("1.2345", &float_result));
-	EXPECT_FLOAT_EQ(1.2345, float_result);
+	EXPECT_FLOAT_NEAR(1.2345, float_result, 1e-6);
 }
 
 TEST(CMath, strtodouble)
@@ -194,7 +194,7 @@ TEST(CMath, strtodouble)
 	EXPECT_DOUBLE_EQ(-CMath::INFTY, double_result);
 
 	EXPECT_TRUE(CMath::strtod("1.234567890123", &double_result));
-	EXPECT_DOUBLE_EQ(1.234567890123, double_result);
+	EXPECT_DOUBLE_NEAR(1.234567890123, double_result, 1e-11);
 }
 
 TEST(CMath, strtolongdouble)
@@ -210,7 +210,7 @@ TEST(CMath, strtolongdouble)
 	EXPECT_DOUBLE_EQ(-CMath::INFTY, long_double_result);
 
 	EXPECT_TRUE(CMath::strtold("1.234567890123", &long_double_result));
-	EXPECT_DOUBLE_EQ(1.234567890123, long_double_result);
+	EXPECT_DOUBLE_NEAR(1.234567890123, long_double_result, 1e-11);
 }
 
 TEST(CMath, fequals_regular_large_numbers)
