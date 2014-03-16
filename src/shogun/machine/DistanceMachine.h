@@ -20,6 +20,8 @@
 namespace shogun
 {
 	class CDistance;
+	class CFeatures;
+	class CMulticlassLabels;
 
 /** @brief A generic DistanceMachine interface.
  *
