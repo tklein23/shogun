@@ -10,8 +10,6 @@
  */
 
 #include <shogun/machine/Machine.h>
-#include <shogun/base/Parameter.h>
-#include <shogun/mathematics/Math.h>
 #include <shogun/base/ParameterMap.h>
 
 using namespace shogun;

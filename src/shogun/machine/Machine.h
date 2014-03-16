@@ -27,7 +27,6 @@ namespace shogun
 
 class CFeatures;
 class CLabels;
-class CMath;
 
 /** classifier type */
 enum EMachineType
