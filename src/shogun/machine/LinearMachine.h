@@ -12,8 +12,6 @@
 #define _LINEARCLASSIFIER_H__
 
 #include <shogun/lib/common.h>
-#include <shogun/labels/Labels.h>
-#include <shogun/features/DotFeatures.h>
 #include <shogun/machine/Machine.h>
 #include <shogun/lib/SGVector.h>
 
@@ -21,6 +19,11 @@
 
 namespace shogun
 {
+
+class CBinaryLabels;
+class CDotFeatures;
+class CFeatures;
+class CRegressionLabels;
 
 /** @brief Class LinearMachine is a generic interface for all kinds of linear
  * machines like classifiers.
