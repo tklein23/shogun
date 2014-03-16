@@ -15,14 +15,12 @@
 #include <shogun/labels/Labels.h>
 #include <shogun/features/DotFeatures.h>
 #include <shogun/machine/Machine.h>
+#include <shogun/lib/SGVector.h>
 
 #include <stdio.h>
 
 namespace shogun
 {
-	class CDotFeatures;
-	class CMachine;
-	class CLabels;
 
 /** @brief Class LinearMachine is a generic interface for all kinds of linear
  * machines like classifiers.
