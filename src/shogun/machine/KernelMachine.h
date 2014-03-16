@@ -13,7 +13,6 @@
 #define _KERNEL_MACHINE_H__
 
 #include <shogun/lib/common.h>
-#include <shogun/io/SGIO.h>
 #include <shogun/kernel/Kernel.h>
 #include <shogun/kernel/CustomKernel.h>
 #include <shogun/labels/Labels.h>
