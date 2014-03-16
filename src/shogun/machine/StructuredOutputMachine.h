@@ -13,10 +13,7 @@
 #define _STRUCTURED_OUTPUT_MACHINE__H__
 
 #include <shogun/lib/common.h>
-#include <shogun/labels/StructuredLabels.h>
 #include <shogun/machine/Machine.h>
-#include <shogun/structure/StructuredModel.h>
-#include <shogun/loss/LossFunction.h>
 #include <shogun/structure/SOSVMHelper.h>
 
 namespace shogun
@@ -24,6 +21,9 @@ namespace shogun
 
 class CFeatures;
 class CLabels;
+class CLossFunction;
+class CStructuredLabels;
+struct TMultipleCPinfo;
 
 /** The structured empirical risk types, corresponding to different training objectives [1].
  *
