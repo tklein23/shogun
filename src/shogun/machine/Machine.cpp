@@ -277,5 +277,3 @@ CLatentLabels* CMachine::apply_locked_latent(SGVector<index_t> indices)
 			"for %s\n", get_name());
 	return NULL;
 }
-
-

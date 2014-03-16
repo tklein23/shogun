@@ -14,7 +14,6 @@
 
 #include <shogun/lib/common.h>
 #include <shogun/base/SGObject.h>
-#include <shogun/labels/Labels.h>
 #include <shogun/labels/BinaryLabels.h>
 #include <shogun/labels/RegressionLabels.h>
 #include <shogun/labels/MulticlassLabels.h>
