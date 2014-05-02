@@ -130,6 +130,17 @@ template<class T> class SGMatrix : public SGReferencedData
 		/** fill matrix with zeros */
 		void zero();
 
+		/**
+		 * Checks whether the matrix is symmetric or not. The equality check
+		 * is performed using '==' operators for discrete types (int, char,
+		 * bool) and using CMath::fequals method for floating types (float,
+		 * double, long double, std::complex<double>) with default espilon
+		 * values from std::numeric_limits
+		 *
+		 * @return whether the matrix is symmetric
+		 */
+		bool is_symmetric();
+
 		/** returns the maximum single element of the matrix */
 		T max_single();
 
@@ -152,19 +163,6 @@ template<class T> class SGMatrix : public SGReferencedData
 		 * @param scale (optional) scaling factor
 		 */
 		static SGMatrix<T> create_identity_matrix(index_t size, T scale);
-
-		/** returns the centering matrix, given by H=I-1/n*O, where
-		 * I is the identity matrix, O is a square matrix of ones of size n
-		 * Multiplied from the left hand side, subtracts from each column
-		 * its mean.
-		 * Multiplied from the right hand side, subtracts from each row
-		 * its mean (so from each dimension of a SHOGUN feature)
-		 *
-		 * Note that H*H=H=H^T
-		 *
-		 * @param size size of centering matrix
-		 */
-		static SGMatrix<float64_t> create_centering_matrix(index_t size);
 
 #ifdef HAVE_LAPACK
 		/** compute eigenvalues and eigenvectors of symmetric matrix using

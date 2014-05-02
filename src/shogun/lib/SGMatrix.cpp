@@ -18,6 +18,7 @@
 #include <shogun/lib/SGVector.h>
 #include <shogun/mathematics/Math.h>
 #include <shogun/mathematics/lapack.h>
+#include <limits>
 
 namespace shogun {
 
@@ -103,6 +104,92 @@ void SGMatrix<complex128_t>::zero()
 {
 	if (matrix && (int64_t(num_rows)*num_cols))
 		set_const(complex128_t(0.0));
+}
+
+template <class T>
+bool SGMatrix<T>::is_symmetric()
+{
+	if (num_rows!=num_cols)
+		return false;
+	for (int i=0; i<num_rows; ++i)
+	{
+		for (int j=i+1; j<num_cols; ++j)
+		{
+			if (matrix[j*num_rows+i]!=matrix[i*num_rows+j])
+				return false;
+		}
+	}
+	return true;
+}
+
+template <>
+bool SGMatrix<float32_t>::is_symmetric()
+{
+	if (num_rows!=num_cols)
+		return false;
+	for (int i=0; i<num_rows; ++i)
+	{
+		for (int j=i+1; j<num_cols; ++j)
+		{
+			if (!CMath::fequals<float32_t>(matrix[j*num_rows+i],
+						matrix[i*num_rows+j], FLT_EPSILON))
+				return false;
+		}
+	}
+	return true;
+}
+
+template <>
+bool SGMatrix<float64_t>::is_symmetric()
+{
+	if (num_rows!=num_cols)
+		return false;
+	for (int i=0; i<num_rows; ++i)
+	{
+		for (int j=i+1; j<num_cols; ++j)
+		{
+			if (!CMath::fequals<float64_t>(matrix[j*num_rows+i],
+						matrix[i*num_rows+j], DBL_EPSILON))
+				return false;
+		}
+	}
+	return true;
+}
+
+template <>
+bool SGMatrix<floatmax_t>::is_symmetric()
+{
+	if (num_rows!=num_cols)
+		return false;
+	for (int i=0; i<num_rows; ++i)
+	{
+		for (int j=i+1; j<num_cols; ++j)
+		{
+			if (!CMath::fequals<floatmax_t>(matrix[j*num_rows+i],
+						matrix[i*num_rows+j], LDBL_EPSILON))
+				return false;
+		}
+	}
+	return true;
+}
+
+template <>
+bool SGMatrix<complex128_t>::is_symmetric()
+{
+	if (num_rows!=num_cols)
+		return false;
+	for (int i=0; i<num_rows; ++i)
+	{
+		for (int j=i+1; j<num_cols; ++j)
+		{
+			if (!(CMath::fequals<float64_t>(matrix[j*num_rows+i].real(),
+						matrix[i*num_rows+j].real(), DBL_EPSILON) &&
+					CMath::fequals<float64_t>(matrix[j*num_rows+i].imag(),
+						matrix[i*num_rows+j].imag(), DBL_EPSILON)))
+				return false;
+		}
+	}
+	return true;
 }
 
 template <class T>
@@ -701,22 +788,6 @@ SGMatrix<complex128_t> SGMatrix<complex128_t>::create_identity_matrix(index_t si
 	return I;
 }
 
-
-template <class T>
-SGMatrix<float64_t> SGMatrix<T>::create_centering_matrix(index_t size)
-{
-	SGMatrix<float64_t> H=SGMatrix<float64_t>::create_identity_matrix(size, 1.0);
-
-	float64_t subtract=1.0/size;
-	for (index_t i=0; i<size; ++i)
-	{
-		for (index_t j=0; j<0; ++j)
-			H(i,j)-=subtract;
-	}
-
-	return H;
-}
-
 //Howto construct the pseudo inverse (from "The Matrix Cookbook")
 //
 //Assume A does not have full rank, i.e. A is n \times m and rank(A) = r < min(n;m).
@@ -779,7 +850,7 @@ void SGMatrix<T>::inverse(SGMatrix<float64_t> matrix)
 template <class T>
 SGVector<float64_t> SGMatrix<T>::compute_eigenvectors(SGMatrix<float64_t> matrix)
 {
-	if (matrix.num_rows!=matrix.num_rows)
+	if (matrix.num_rows!=matrix.num_cols)
 	{
 		SG_SERROR("SGMatrix::compute_eigenvectors(SGMatrix<float64_t>): matrix"
 				" rows and columns are not equal!\n");

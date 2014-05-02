@@ -41,6 +41,7 @@
 #include <shogun/neuralnets/NeuralNetwork.h>
 #include <shogun/neuralnets/NeuralLogisticLayer.h>
 #include <shogun/neuralnets/NeuralSoftmaxLayer.h>
+#include <shogun/neuralnets/NeuralRectifiedLinearLayer.h>
 #include <gtest/gtest.h>
 
 using namespace shogun;
@@ -53,6 +54,8 @@ TEST(NeuralNetwork, compute_gradients)
 	CDynamicObjectArray* layers;
 	CNeuralNetwork* network;
 	
+	float64_t tolerance = 1e-3;
+	
 	layers = new CDynamicObjectArray();
 	layers->append_element(new CNeuralLinearLayer(3));
 	layers->append_element(new CNeuralLinearLayer(6));
@@ -60,7 +63,8 @@ TEST(NeuralNetwork, compute_gradients)
 	network = new CNeuralNetwork();
 	network->initialize(5, layers);
 	network->l2_coefficient = 0.01;
-	EXPECT_EQ(true, network->check_gradients())
+	network->l1_coefficient = 0.03;
+	EXPECT_NEAR(network->check_gradients(), 0.0, tolerance)
 		<< "CNeuralLinearLayer gradient check failed";
 	SG_UNREF(network);
 	
@@ -70,8 +74,9 @@ TEST(NeuralNetwork, compute_gradients)
 	layers->append_element(new CNeuralLogisticLayer(4));
 	network = new CNeuralNetwork();
 	network->initialize(5, layers);
+	network->l1_coefficient = 0.03;
 	network->l2_coefficient = 0.01;
-	EXPECT_EQ(true, network->check_gradients())
+	EXPECT_NEAR(network->check_gradients(), 0.0, tolerance)
 		<< "CNeuralLogisticLayer gradient check failed";
 	SG_UNREF(network);
 	
@@ -81,9 +86,22 @@ TEST(NeuralNetwork, compute_gradients)
 	layers->append_element(new CNeuralSoftmaxLayer(4));
 	network = new CNeuralNetwork();
 	network->initialize(5, layers);
+	network->l1_coefficient = 0.03;
 	network->l2_coefficient = 0.01;
-	EXPECT_EQ(true, network->check_gradients())
+	EXPECT_NEAR(network->check_gradients(), 0.0, tolerance)
 		<< "CNeuralSoftmaxLayer gradient check failed";
+	SG_UNREF(network);
+	
+	layers = new CDynamicObjectArray();
+	layers->append_element(new CNeuralRectifiedLinearLayer(3));
+	layers->append_element(new CNeuralRectifiedLinearLayer(6));
+	layers->append_element(new CNeuralLogisticLayer(4));
+	network = new CNeuralNetwork();
+	network->initialize(5, layers);
+	network->l1_coefficient = 0.03;
+	network->l2_coefficient = 0.01;
+	EXPECT_NEAR(network->check_gradients(), 0.0, tolerance)
+		<< "CNeuralRectifiedLinearLayer gradient check failed";
 	SG_UNREF(network);
 }
 
@@ -126,7 +144,6 @@ TEST(NeuralNetwork, binary_classification)
 	
 	network->epsilon = 1e-12;
 	
-	network->print_during_training = false;
 	network->set_labels(labels);
 	network->train(features);
 	
@@ -181,7 +198,6 @@ TEST(NeuralNetwork, multiclass_classification)
 	
 	network->epsilon = 1e-12;
 	
-	network->print_during_training = false;
 	network->set_labels(labels);
 	network->train(features);
 	
@@ -224,7 +240,6 @@ TEST(NeuralNetwork, regression)
 	for (int32_t i=0; i<network->get_num_parameters(); i++)
 		network->get_parameters()[i] = i * 1.0e-5;
 
-	network->print_during_training = false;
 	network->set_labels(labels);
 	network->train(features);
 	
@@ -276,12 +291,12 @@ TEST(NeuralNetwork, gradient_descent)
 	// initialize the weights deterministically
 	for (int32_t i=0; i<network->get_num_parameters(); i++)
 		network->get_parameters()[i] = i * 1.0e-1;
-	
+
 	network->optimization_method = NNOM_GRADIENT_DESCENT;
 	network->gd_learning_rate = 10.0;
-	network->epsilon = 1.0e-4;
+	network->epsilon = 0.0;
+	network->max_num_epochs = 1000;
 	
-	network->print_during_training = false;
 	network->set_labels(labels);
 	network->train(features);
 	

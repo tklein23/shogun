@@ -21,6 +21,8 @@
 %newobject get_transposed();
 %newobject create_merged_copy(CFeatures* other);
 %newobject copy_subset(SGVector<index_t> indices);
+%newobject get_streamed_features(index_t num_elements);
+
 
 /* methods in the labels factory do a conversion only - but need to be ref'd for modular interfaces */
 %newobject shogun::CLabelsFactory::to_binary(CLabels* base_labels);
@@ -56,6 +58,7 @@
 %rename(StreamingDotFeatures) CStreamingDotFeatures;
 %rename(StreamingVwFeatures) CStreamingVwFeatures;
 %rename(DummyFeatures) CDummyFeatures;
+%rename(IndexFeatures) CIndexFeatures;
 %rename(AttributeFeatures) CAttributeFeatures;
 %rename(CombinedFeatures) CCombinedFeatures;
 %rename(CombinedDotFeatures) CCombinedDotFeatures;
@@ -487,6 +490,7 @@ namespace shogun
 }
 
 %include <shogun/features/DummyFeatures.h>
+%include <shogun/features/IndexFeatures.h>
 %include <shogun/features/AttributeFeatures.h>
 %include <shogun/features/CombinedFeatures.h>
 %include <shogun/features/CombinedDotFeatures.h>

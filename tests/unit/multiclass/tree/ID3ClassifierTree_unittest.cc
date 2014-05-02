@@ -197,3 +197,115 @@ TEST(ID3ClassifierTree, classify_simple)
 	SG_UNREF(id3);
 	SG_UNREF(feats);
 }
+
+TEST(ID3ClassifierTree, tree_prune)
+{
+
+	// form toy data
+	SGMatrix<float64_t> data(4,16);
+	float64_t num=0.0;
+
+	for (int32_t i=0;i<2;i++)
+	{
+		for (int32_t a=0;a<8;a++)
+			data(0,i*8+a)=num;
+	
+		num++;
+	}
+
+	num=0.0;
+	for (int32_t i=0;i<4;i++)
+	{
+		for (int32_t a=0;a<4;a++)
+			data(1,i*4+a)=num;
+
+		num=(num==1.0)?0.0:1.0;
+	}
+
+	num=0.0;
+	for (int32_t i=0;i<8;i++)
+	{
+		for (int32_t a=0;a<2;a++)
+			data(2,i*2+a)=num;
+
+		num=(num==1.0)?0.0:1.0;
+	}
+
+	num=0.0;
+	for (int32_t i=0;i<16;i++)
+	{
+		data(3,i)=num;
+		num=(num==1.0)?0.0:1.0;
+	}
+
+	// form toy labels
+	SGVector<float64_t> train_labels(16);
+	train_labels[0]=1;
+	train_labels[1]=1;
+	train_labels[2]=1;
+	train_labels[3]=0;
+	train_labels[4]=0;
+	train_labels[5]=0;
+	train_labels[6]=0;
+	train_labels[7]=0;
+	train_labels[8]=1;
+	train_labels[9]=1;
+	train_labels[10]=1;
+	train_labels[11]=1;
+	train_labels[12]=1;
+	train_labels[13]=1;
+	train_labels[14]=1;
+	train_labels[15]=1;
+
+	SGVector<float64_t> validation_labels(16);
+	validation_labels[0]=1;
+	validation_labels[1]=0;
+	validation_labels[2]=0;
+	validation_labels[3]=0;
+	validation_labels[4]=1;
+	validation_labels[5]=0;
+	validation_labels[6]=0;
+	validation_labels[7]=0;
+	validation_labels[8]=1;
+	validation_labels[9]=0;
+	validation_labels[10]=1;
+	validation_labels[11]=0;
+	validation_labels[12]=1;
+	validation_labels[13]=1;
+	validation_labels[14]=1;
+	validation_labels[15]=1;
+
+	CDenseFeatures<float64_t>* train_features=new CDenseFeatures<float64_t>(data);
+	CMulticlassLabels* train_lab=new CMulticlassLabels(train_labels);
+	CMulticlassLabels* validation_lab=new CMulticlassLabels(validation_labels);
+
+	CID3ClassifierTree* id3tree=new CID3ClassifierTree();
+	id3tree->set_labels(train_lab);
+	id3tree->train(train_features);
+	id3tree->prune_tree(train_features,validation_lab);
+
+	CMulticlassLabels* result=(CMulticlassLabels*) id3tree->apply(train_features);
+	SGVector<float64_t> res_vector=result->get_labels();
+
+	EXPECT_EQ(1.0,res_vector[0]);
+	EXPECT_EQ(0.0,res_vector[1]);
+	EXPECT_EQ(1.0,res_vector[2]);
+	EXPECT_EQ(0.0,res_vector[3]);
+	EXPECT_EQ(0.0,res_vector[4]);
+	EXPECT_EQ(0.0,res_vector[5]);
+	EXPECT_EQ(0.0,res_vector[6]);
+	EXPECT_EQ(0.0,res_vector[7]);
+	EXPECT_EQ(1.0,res_vector[8]);
+	EXPECT_EQ(1.0,res_vector[9]);
+	EXPECT_EQ(1.0,res_vector[10]);
+	EXPECT_EQ(1.0,res_vector[11]);
+	EXPECT_EQ(1.0,res_vector[12]);
+	EXPECT_EQ(1.0,res_vector[13]);
+	EXPECT_EQ(1.0,res_vector[14]);
+	EXPECT_EQ(1.0,res_vector[15]);
+
+	SG_UNREF(train_features);
+	SG_UNREF(validation_lab);
+	SG_UNREF(result);
+	SG_UNREF(id3tree);
+}
